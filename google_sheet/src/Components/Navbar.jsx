@@ -1,23 +1,27 @@
 import React, {useState} from 'react'
-import { Text, View, StyleSheet, Button, Alert, TouchableOpacity } from 'react-native'
+import { Text, View, StyleSheet, Alert, TouchableOpacity, PermissionsAndroid } from 'react-native';
+import RNFetchBlob from "rn-fetch-blob";
 
 const Navbar = ({cell}) => {
 
-    const [isPress, setIsPress] = useState(false);
+  
     const [savedData, setSavedData] = useState(false)
 
 
-     const convertToExcelFile = async () => {
-        const rows = cell.map(row => row.join(',')).join('\n');
-        console.log(rows);
-        const filePath = `${RNFetchBlob.fs.dirs.DownloadDir}/data${Math.floor(Math.random() * 16) + 5}.csv`;
-        await RNFetchBlob.fs.writeFile(filePath, rows, 'utf8');
-        if(filePath){
-         Alert.alert(`File Path ${filePath}`)
-        }
-        console.log(`Excel sheet generated at ${filePath}`);
-    
-      };
+    const convertToExcelFile = async () => {
+      const content = cell.map(row => row.join(',')).join('\n');
+      console.log(content);
+      const filePath = `${RNFetchBlob.fs.dirs.DownloadDir}/data${Math.floor(Math.random() * 100) + 1}.csv`;
+      await RNFetchBlob.fs.writeFile(filePath, content, 'utf8');
+      if(filePath){
+        Alert.alert(
+          "File is Downloaded",
+          `File Path ${filePath}`,
+        );
+      }
+      console.log(`Excel sheet generated at ${filePath}`);
+
+    };
 
     const requestToStoragePermission = async () => {
         try {
@@ -35,7 +39,7 @@ const Navbar = ({cell}) => {
           );
           if (granted === PermissionsAndroid.RESULTS.GRANTED) {
             convertToExcelFile();
-            setSavedData(true)
+            setSavedData(true);
           } else {
             console.log('Storage permission denied');
           }
@@ -44,49 +48,60 @@ const Navbar = ({cell}) => {
         }
       };
 
-
   return (
-   <View>
-     <View style={Styles.navStyle}>
-        <TouchableOpacity 
-          style={[Styles.btnStyle, {backgroundColor: isPress ? 'red' : 'green'}]}
-          activeOpacity={0.5}
-          onPress={()=>{savedData?convertToExcelFile():requestToStoragePermission()}}
-    
-        > 
-            <View>
-                <Text style={Styles.textStyle}>Download an excel file</Text>
-            </View>
-        </TouchableOpacity>
-     </View> 
-     
-   </View>
+
+  <View style={styles.navStyle}>
+
+    <TouchableOpacity 
+      style={[styles.btnStyle, {width:140} ]}
+      activeOpacity={0.5}
+      onPress={() => Alert.alert("This page is created by Shubham")}
+    > 
+    <View>
+        <Text style={styles.textStyle}>Shubham</Text>
+    </View>
+
+    </TouchableOpacity>
+
+    <TouchableOpacity 
+      style={[styles.btnStyle,]}
+      activeOpacity={0.5}
+      onPress={()=>{savedData?convertToExcelFile():requestToStoragePermission()}}
+    > 
+    <View>
+        <Text style={styles.textStyle}>Download an excel file</Text>
+    </View>
+
+    </TouchableOpacity>
+
+    </View>
   )
 }
 
 export default Navbar
 
-const Styles = StyleSheet.create({
+const styles = StyleSheet.create({
     navStyle : {
-        backgroundColor: '#ddd',
-        borderWidth: 1,
-        borderRadius:4,
-        padding:10,
-        height:'auto',
-        // marginTop:1,
-        marginBottom:10
+      backgroundColor: '#ddd',
+      borderWidth: 1,
+      borderRadius:4,
+      padding:10,
+      marginBottom:10,
+      flexDirection:'row', 
+      justifyContent:'center'
     },
     btnStyle: {
-        borderRadius:6,
-        width:'auto',
-        paddingHorizontal:18,
-        paddingVertical:4,
-        alignSelf:'center',
-
+      width:220,
+      borderRadius:6,
+      borderWidth:1,
+      marginHorizontal:4,
+      backgroundColor:'green',
+      paddingVertical:4,
+      alignSelf:'center',
     },
     textStyle : {
-        fontSize:24,
-        alignSelf:'center',
-        color:'#fff'  
-    },
+      fontSize:18,
+      alignSelf:'center',
+      color:'#fff',
+  },
   })

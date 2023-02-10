@@ -3,7 +3,7 @@ import React from "react";
 import { View } from "react-native";
 import { StatusBar } from "react-native";
 import ExcelData from "./Components/ExcelData";
-import Navbar from "./Components/Navbar";
+
 
 
 
